@@ -14,4 +14,18 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('web')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Master Data
+    Route::get('/master/supplier', function () {
+        return view('master.supplier.index');
+    })->name('master.supplier.index');
+
+    Route::get('/master/customer', function () {
+        return view('master.customer.index');
+    })->name('master.customer.index');
+
+    // Transaksi
+    Route::get('/transaksi/pembelian', function () {
+        return view('transactions.pembelian.index');
+    })->name('transactions.pembelian.index');
 });
