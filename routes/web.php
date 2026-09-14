@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ItemController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,6 +24,8 @@ Route::middleware('web')->group(function () {
     Route::get('/master/customer', function () {
         return view('master.customer.index');
     })->name('master.customer.index');
+
+    Route::get('/barang', [ItemController::class, 'index'])->name('barang.index');
 
     // Transaksi
     Route::get('/transaksi/pembelian', function () {

@@ -3,6 +3,7 @@
 .env
 .env.backup
 .env.production
+.credentials.local.txt
 .phpactor.json
 .phpunit.result.cache
 /.codex

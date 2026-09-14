@@ -1,7 +1,7 @@
-<header class="h-14 bg-[#006680] text-white flex items-center justify-between px-4 sm:px-6 shadow-sm sticky top-0 z-30 select-none">
+<header class="sticky top-0 z-30 flex h-14 select-none items-center justify-between bg-[#006680] px-4 text-white shadow-sm sm:px-6">
     <!-- Left Section: Hamburger & Mobile Toggle -->
     <div class="flex items-center gap-4">
-        <button type="button" class="text-white/90 hover:text-white p-1.5 rounded-md hover:bg-white/10 transition-colors focus:outline-none" aria-label="Toggle Menu">
+        <button type="button" class="rounded-md p-1.5 text-white/90 transition-colors hover:bg-white/10 hover:text-white focus:outline-none lg:hidden" @click="sidebarOpen = true" aria-label="Buka menu navigasi">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>

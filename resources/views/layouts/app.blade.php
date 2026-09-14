@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'PharmaPOS')</title>
+    <style>[x-cloak] { display: none !important; }</style>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,6 +36,8 @@
         </script>
     @endif
 
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
         body {
             font-family: 'Instrument Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -43,18 +46,21 @@
     </style>
     @stack('styles')
 </head>
-<body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen">
-    <div class="flex min-h-screen">
+<body x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false" class="min-h-screen bg-[#f8fafc] text-slate-800 antialiased">
+    <div class="min-h-screen">
         <!-- Sidebar Navigation -->
         @include('layouts.partials.sidebar')
 
+        <!-- Mobile Backdrop -->
+        <div x-cloak x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-40 bg-black/50 lg:hidden" @click="sidebarOpen = false" aria-hidden="true"></div>
+
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col min-w-0">
+        <div class="flex min-h-screen min-w-0 flex-col lg:pl-64">
             <!-- Top Header Navbar -->
             @include('layouts.partials.navbar')
 
             <!-- Main Canvas Body -->
-            <main class="flex-1 p-6 md:p-8 overflow-y-auto">
+            <main class="w-full flex-1 overflow-x-hidden p-4 sm:p-6 md:p-8">
                 @yield('content')
             </main>
         </div>

@@ -1,4 +1,7 @@
-<aside class="w-64 bg-[#2d3235] text-slate-300 flex flex-col flex-shrink-0 min-h-screen select-none">
+<aside
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+    class="fixed inset-y-0 left-0 z-50 flex h-screen w-64 -translate-x-full flex-col overflow-y-auto bg-[#2d3235] text-slate-300 shadow-xl transition-transform duration-300 ease-out select-none lg:translate-x-0 lg:shadow-none"
+    aria-label="Navigasi utama">
     <!-- Brand Logo Header -->
     <div class="h-16 flex items-center gap-3 px-5 border-b border-white/5">
         <div class="w-9 h-9 rounded-lg bg-[#0e83a2] flex items-center justify-center text-white shadow-sm flex-shrink-0">
@@ -65,8 +68,8 @@
                 </a>
 
                 <!-- Barang -->
-                <a href="#"
-                   class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                     <a href="{{ route('barang.index') }}"
+                         class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('barang.*') ? 'bg-[#0e83a2] text-white shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
