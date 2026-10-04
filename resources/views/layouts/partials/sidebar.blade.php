@@ -25,7 +25,8 @@
                 </svg>
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-slate-100 truncate">admin</p>
+                <p class="text-sm font-medium text-slate-100 truncate">{{ auth()->user()->name ?? 'Pengguna' }}</p>
+                <p class="text-xs text-slate-400 capitalize">{{ auth()->user()?->getRoleNames()->first() ?? 'user' }}</p>
             </div>
         </div>
     </div>
@@ -34,6 +35,7 @@
     <nav class="flex-1 px-3 space-y-6 pb-6 overflow-y-auto">
         <!-- Main / Dashboard -->
         <div>
+            @hasanyrole('admin|kasir')
             <a href="{{ route('dashboard') }}"
                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('dashboard*') ? 'bg-[#0e83a2] text-white shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
                 <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -41,6 +43,7 @@
                 </svg>
                 <span>Dashboard</span>
             </a>
+            @endhasanyrole
         </div>
 
         <!-- Section: MASTER -->
@@ -49,6 +52,7 @@
                 MASTER
             </div>
             <div class="space-y-1">
+                @role('admin')
                 <!-- Supplier -->
                 <a href="{{ route('master.supplier.index') }}"
                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('master.supplier*') ? 'bg-[#0e83a2] text-white shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
@@ -57,7 +61,9 @@
                     </svg>
                     <span>Supplier</span>
                 </a>
+                @endrole
 
+                @hasanyrole('admin|kasir')
                 <!-- Customer -->
                 <a href="{{ route('master.customer.index') }}"
                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('master.customer*') ? 'bg-[#0e83a2] text-white shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
@@ -66,7 +72,9 @@
                     </svg>
                     <span>Customer</span>
                 </a>
+                @endhasanyrole
 
+                @hasanyrole('admin|kasir')
                 <!-- Barang -->
                      <a href="{{ route('barang.index') }}"
                          class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('barang.*') ? 'bg-[#0e83a2] text-white shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
@@ -75,6 +83,7 @@
                     </svg>
                     <span>Barang</span>
                 </a>
+                @endhasanyrole
             </div>
         </div>
 
@@ -84,6 +93,7 @@
                 TRANSAKSI
             </div>
             <div class="space-y-1">
+                @role('admin')
                 <!-- Pembelian -->
                 <a href="{{ route('transactions.pembelian.index') }}"
                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('transactions.pembelian*') ? 'bg-[#0e83a2] text-white shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
@@ -92,15 +102,18 @@
                     </svg>
                     <span>Pembelian</span>
                 </a>
+                @endrole
 
+                @hasanyrole('admin|kasir')
                 <!-- Penjualan -->
-                <a href="#"
+                <a href="{{ route('transactions.penjualan.index') }}"
                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
                     <span>Penjualan</span>
                 </a>
+                @endhasanyrole
             </div>
         </div>
 
@@ -110,33 +123,29 @@
                 REPORT
             </div>
             <div class="space-y-1">
+                @role('admin')
                 <!-- Laporan Pembelian -->
-                <a href="#"
+                <a href="{{ route('reports.pembelian') }}"
                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     <span>Laporan Pembelian</span>
                 </a>
+                @endrole
 
+                @hasanyrole('admin|kasir')
                 <!-- Laporan Penjualan -->
-                <a href="#"
+                <a href="{{ route('reports.penjualan') }}"
                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                     <span>Laporan Penjualan</span>
                 </a>
+                @endhasanyrole
 
-                <!-- Laporan Stok -->
-                <a href="#"
-                   class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span>Laporan Stok</span>
-                </a>
-
+                @role('admin')
                 <!-- Pengaturan -->
                 <a href="#"
                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
@@ -155,6 +164,7 @@
                     </svg>
                     <span>User</span>
                 </a>
+                @endrole
             </div>
         </div>
     </nav>

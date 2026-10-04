@@ -16,23 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => 'kasir@apotek.test'],
-            [
-                'name' => 'kasir',
-                'password' => bcrypt('098123'),
-                'role' => 'kasir',
-            ]
-        );
-
-        User::updateOrCreate(
-            ['email' => 'admin@apotek.test'],
-            [
-                'name' => 'admin',
-                'password' => bcrypt('123098'),
-                'role' => 'admin',
-            ]
-        );
+        $this->call(RolePermissionSeeder::class);
 
         $items = [
             ['item_code' => 'MED-001', 'name' => 'Paracetamol 500mg', 'category' => 'Tablet', 'selling_price' => 5000, 'stock' => 1250],

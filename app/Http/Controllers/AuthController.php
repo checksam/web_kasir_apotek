@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public function showLogin(): View|RedirectResponse
     {
-        if (session('user')) {
+        if (Auth::check()) {
             return redirect()->route('dashboard');
         }
 
@@ -25,19 +25,18 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $user = User::authenticate($credentials['email'], $credentials['password']);
-
-        if (! $user) {
+        if (! Auth::attempt($credentials)) {
             return back()->withErrors([
                 'email' => 'Email atau password salah.',
             ])->onlyInput('email');
         }
 
+        $request->session()->regenerate();
         $request->session()->put('user', [
-            'id' => $user['id'],
-            'name' => $user['name'],
-            'email' => $user['email'],
-            'role' => $user['role'],
+            'id' => Auth::id(),
+            'name' => Auth::user()->name,
+            'email' => Auth::user()->email,
+            'role' => Auth::user()->getRoleNames()->first() ?? Auth::user()->role ?? 'user',
         ]);
 
         return redirect()->route('dashboard');
@@ -45,7 +44,10 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+        Auth::logout();
         $request->session()->forget('user');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()->route('login');
     }

@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request): View
     {
-        $user = $request->session()->get('user');
+        $user = $request->user();
 
         $stats = [
             ['label' => 'Pengguna', 'value' => 3, 'color' => 'blue'],
@@ -23,7 +23,11 @@ class DashboardController extends Controller
             'Paracetamol 500mg',
         ];
 
-        return view('dashboard.index', [
+        $view = $user->hasRole('kasir')
+            ? 'dashboard.kasir'
+            : 'dashboard.index';
+
+        return view($view, [
             'user' => $user,
             'stats' => $stats,
             'stockAlerts' => $stockAlerts,
