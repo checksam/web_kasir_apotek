@@ -14,6 +14,14 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+        ->middleware('role:admin')
+        ->name('admin.dashboard');
+
+    Route::get('/kasir/dashboard', [DashboardController::class, 'index'])
+        ->middleware('role:kasir')
+        ->name('kasir.dashboard');
+
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware('role:admin|kasir')
         ->name('dashboard');
@@ -39,6 +47,10 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/transaksi/penjualan', function () {
         return view('transactions.penjualan.index');
     })->middleware('role:admin|kasir')->name('transactions.penjualan.index');
+
+    Route::get('/kasir/transaksi/penjualan', function () {
+        return view('transactions.penjualan.index');
+    })->middleware('role:kasir')->name('kasir.penjualan');
 
     // Reports
     Route::get('/laporan/pembelian', function () {

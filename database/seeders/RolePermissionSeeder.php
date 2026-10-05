@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class RolePermissionSeeder extends Seeder
@@ -24,7 +25,7 @@ class RolePermissionSeeder extends Seeder
             ['email' => 'admin@apotek.test'],
             [
                 'name' => 'admin',
-                'password' => '123098',
+                'password' => Hash::make('123098'),
                 'role' => 'admin',
             ]
         );
@@ -33,7 +34,7 @@ class RolePermissionSeeder extends Seeder
             ['email' => 'kasir@apotek.test'],
             [
                 'name' => 'kasir',
-                'password' => '098123',
+                'password' => Hash::make('098123'),
                 'role' => 'kasir',
             ]
         );

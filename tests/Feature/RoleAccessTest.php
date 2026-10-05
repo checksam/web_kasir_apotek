@@ -50,6 +50,7 @@ class RoleAccessTest extends TestCase
     public function test_admin_can_access_every_registered_application_page(): void
     {
         $adminPages = [
+            'admin.dashboard',
             'dashboard',
             'master.customer.index',
             'master.supplier.index',
@@ -70,6 +71,7 @@ class RoleAccessTest extends TestCase
     public function test_kasir_can_access_cashier_pages(): void
     {
         $cashierPages = [
+            'kasir.dashboard',
             'dashboard',
             'master.customer.index',
             'barang.index',
@@ -97,6 +99,13 @@ class RoleAccessTest extends TestCase
                 ->get(route($routeName))
                 ->assertForbidden();
         }
+
+        $this->actingAs($this->kasir)
+            ->get(route('reports.pembelian'))
+            ->assertForbidden()
+            ->assertSee('Akses Ditolak')
+            ->assertSee('Kembali ke dashboard')
+            ->assertDontSee('Stack trace');
     }
 
     public function test_guest_is_redirected_to_login_from_protected_pages(): void
@@ -125,7 +134,7 @@ class RoleAccessTest extends TestCase
             'password' => 'password',
         ]);
 
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('kasir.dashboard'));
         $this->assertAuthenticatedAs($this->kasir);
         $this->assertTrue(auth()->user()->hasRole('kasir'));
     }
