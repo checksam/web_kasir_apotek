@@ -2,10 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class RoleAccessTest extends TestCase
@@ -15,6 +16,8 @@ class RoleAccessTest extends TestCase
     private User $admin;
 
     private User $kasir;
+
+    private User $pelanggan;
 
     protected function setUp(): void
     {
@@ -32,6 +35,11 @@ class RoleAccessTest extends TestCase
             'guard_name' => 'web',
         ]);
 
+        $pelangganRole = Role::create([
+            'name' => 'pelanggan',
+            'guard_name' => 'web',
+        ]);
+
         $this->admin = User::factory()->create([
             'name' => 'Admin Test',
             'email' => 'admin-test@apotek.test',
@@ -45,6 +53,19 @@ class RoleAccessTest extends TestCase
             'role' => 'kasir',
         ]);
         $this->kasir->assignRole($kasirRole);
+
+        $customer = Customer::create([
+            'name' => 'Pelanggan Test',
+            'phone' => '081234567890',
+            'address' => 'Alamat test',
+        ]);
+        $this->pelanggan = User::factory()->create([
+            'name' => 'Pelanggan Test',
+            'email' => 'pelanggan-test@apotek.test',
+            'role' => 'pelanggan',
+            'customer_id' => $customer->id,
+        ]);
+        $this->pelanggan->assignRole($pelangganRole);
     }
 
     public function test_admin_can_access_every_registered_application_page(): void
@@ -86,9 +107,50 @@ class RoleAccessTest extends TestCase
         }
     }
 
+    public function test_pelanggan_can_access_only_their_dashboard(): void
+    {
+        $this->actingAs($this->pelanggan)
+            ->get(route('pelanggan.dashboard'))
+            ->assertOk()
+            ->assertSee('Dashboard Pelanggan');
+
+        $this->assertSame('pelanggan', $this->pelanggan->getRoleNames()->first());
+        $this->assertNotNull($this->pelanggan->customer);
+    }
+
+    public function test_pelanggan_is_forbidden_from_admin_and_kasir_pages(): void
+    {
+        $staffPages = [
+            'admin.dashboard',
+            'kasir.dashboard',
+            'dashboard',
+            'master.supplier.index',
+            'master.customer.index',
+            'barang.index',
+            'transactions.pembelian.index',
+            'transactions.penjualan.index',
+            'kasir.penjualan',
+            'reports.pembelian',
+            'reports.penjualan',
+        ];
+
+        foreach ($staffPages as $routeName) {
+            $this->actingAs($this->pelanggan)
+                ->get(route($routeName))
+                ->assertForbidden();
+        }
+
+        $this->actingAs($this->pelanggan)
+            ->get(route('admin.dashboard'))
+            ->assertSee('Akses Ditolak')
+            ->assertSee('Kembali ke dashboard')
+            ->assertDontSee('Stack trace');
+    }
+
     public function test_kasir_is_forbidden_from_admin_pages(): void
     {
         $adminOnlyPages = [
+            'admin.dashboard',
             'master.supplier.index',
             'transactions.pembelian.index',
             'reports.pembelian',
@@ -111,6 +173,9 @@ class RoleAccessTest extends TestCase
     public function test_guest_is_redirected_to_login_from_protected_pages(): void
     {
         $protectedPages = [
+            'admin.dashboard',
+            'kasir.dashboard',
+            'pelanggan.dashboard',
             'dashboard',
             'master.customer.index',
             'master.supplier.index',
@@ -137,5 +202,21 @@ class RoleAccessTest extends TestCase
         $response->assertRedirect(route('kasir.dashboard'));
         $this->assertAuthenticatedAs($this->kasir);
         $this->assertTrue(auth()->user()->hasRole('kasir'));
+    }
+
+    public function test_dashboard_profile_dropdown_contains_a_csrf_protected_post_logout_form(): void
+    {
+        $this->actingAs($this->kasir)
+            ->get(route('kasir.dashboard'))
+            ->assertOk()
+            ->assertSee('aria-haspopup="true"', false)
+            ->assertSee('id="profile-menu"', false)
+            ->assertSee('Logout')
+            ->assertSee('action="'.route('logout').'"', false)
+            ->assertSee('name="_token"', false);
+
+        $this->post(route('logout'))
+            ->assertRedirect(route('login'));
+        $this->assertGuest();
     }
 }

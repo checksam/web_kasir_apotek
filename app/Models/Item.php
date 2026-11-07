@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
@@ -19,6 +20,7 @@ class Item extends Model
 
     protected $fillable = [
         'item_code',
+        'barcode',
         'name',
         'category',
         'selling_price',
@@ -31,6 +33,16 @@ class Item extends Model
             'selling_price' => 'decimal:2',
             'stock' => 'integer',
         ];
+    }
+
+    public function batches(): HasMany
+    {
+        return $this->hasMany(BatchObat::class);
+    }
+
+    public function saleDetails(): HasMany
+    {
+        return $this->hasMany(DetailPenjualan::class);
     }
 
     public function getStockStatusAttribute(): array

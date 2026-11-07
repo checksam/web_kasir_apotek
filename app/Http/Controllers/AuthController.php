@@ -22,6 +22,10 @@ class AuthController extends Controller
                 return redirect()->route('kasir.dashboard');
             }
 
+            if ($user->hasRole('pelanggan')) {
+                return redirect()->route('pelanggan.dashboard');
+            }
+
             Auth::logout();
 
             return redirect()->route('login')->withErrors([
@@ -39,14 +43,14 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (! Auth::attempt($credentials + ['is_active' => true], $request->boolean('remember'))) {
             return back()->withErrors([
                 'email' => 'Email atau password salah.',
             ])->onlyInput('email');
         }
 
         $user = Auth::user();
-        if (! $user->hasAnyRole(['admin', 'kasir'])) {
+        if (! $user->hasAnyRole(['admin', 'kasir', 'pelanggan'])) {
             Auth::logout();
 
             return redirect()->route('login')->withErrors([
@@ -67,7 +71,11 @@ class AuthController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->route('kasir.dashboard');
+        if ($user->hasRole('kasir')) {
+            return redirect()->route('kasir.dashboard');
+        }
+
+        return redirect()->route('pelanggan.dashboard');
     }
 
     public function logout(Request $request): RedirectResponse

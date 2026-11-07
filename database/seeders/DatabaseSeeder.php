@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\BatchObat;
 use App\Models\Item;
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -27,7 +27,16 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($items as $item) {
-            Item::updateOrCreate(['item_code' => $item['item_code']], $item);
+            $savedItem = Item::updateOrCreate(['item_code' => $item['item_code']], $item);
+            BatchObat::firstOrCreate(
+                ['batch_number' => 'DEMO-'.$savedItem->item_code],
+                [
+                    'item_id' => $savedItem->id,
+                    'quantity' => $savedItem->stock,
+                    'received_at' => today()->subDays(30),
+                    'expiration_date' => today()->addYear(),
+                ]
+            );
         }
     }
 }

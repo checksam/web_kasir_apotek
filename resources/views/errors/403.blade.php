@@ -28,6 +28,8 @@
             <a href="{{ route('admin.dashboard') }}">Kembali ke dashboard</a>
         @elseif (auth()->check() && auth()->user()->hasRole('kasir'))
             <a href="{{ route('kasir.dashboard') }}">Kembali ke dashboard</a>
+        @elseif (auth()->check() && auth()->user()->hasRole('pelanggan'))
+            <a href="{{ route('pelanggan.dashboard') }}">Kembali ke dashboard</a>
         @else
             <a href="{{ route('login') }}">Kembali ke login</a>
         @endif

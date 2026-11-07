@@ -3,6 +3,9 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,9 +14,9 @@ Route::get('/', function () {
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware(['web', 'auth'])->group(function () {
+Route::middleware(['web', 'auth', 'active'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])
         ->middleware('role:admin')
         ->name('admin.dashboard');
@@ -21,6 +24,10 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/kasir/dashboard', [DashboardController::class, 'index'])
         ->middleware('role:kasir')
         ->name('kasir.dashboard');
+
+    Route::view('/pelanggan/dashboard', 'dashboard.pelanggan')
+        ->middleware('role:pelanggan')
+        ->name('pelanggan.dashboard');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware('role:admin|kasir')
@@ -44,13 +51,19 @@ Route::middleware(['web', 'auth'])->group(function () {
         return view('transactions.pembelian.index');
     })->middleware('role:admin')->name('transactions.pembelian.index');
 
-    Route::get('/transaksi/penjualan', function () {
-        return view('transactions.penjualan.index');
-    })->middleware('role:admin|kasir')->name('transactions.penjualan.index');
+    Route::get('/transaksi/penjualan', [PenjualanController::class, 'index'])
+        ->middleware('role:admin|kasir')
+        ->name('transactions.penjualan.index');
+    Route::post('/transaksi/penjualan', [PenjualanController::class, 'checkout'])
+        ->middleware('role:admin|kasir')
+        ->name('transactions.penjualan.checkout');
 
-    Route::get('/kasir/transaksi/penjualan', function () {
-        return view('transactions.penjualan.index');
-    })->middleware('role:kasir')->name('kasir.penjualan');
+    Route::get('/kasir/transaksi/penjualan', [PenjualanController::class, 'index'])
+        ->middleware('role:kasir')
+        ->name('kasir.penjualan');
+    Route::post('/kasir/transaksi/penjualan', [PenjualanController::class, 'checkout'])
+        ->middleware('role:kasir')
+        ->name('kasir.penjualan.checkout');
 
     // Reports
     Route::get('/laporan/pembelian', function () {
@@ -60,4 +73,15 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/laporan/penjualan', function () {
         return view('reports.penjualan');
     })->middleware('role:admin|kasir')->name('reports.penjualan');
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/pengaturan', [SettingController::class, 'edit'])->name('settings.edit');
+        Route::put('/pengaturan', [SettingController::class, 'update'])->name('settings.update');
+
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    });
 });

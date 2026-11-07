@@ -53,6 +53,18 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## POS Penjualan Lokal
+
+Jalankan migrasi dan seeder demo untuk membuat akun, obat, dan batch stok awal:
+
+```bash
+php artisan migrate
+php artisan db:seed
+php artisan serve
+```
+
+Kasir dapat membuka `/kasir/transaksi/penjualan`, mencari obat berdasarkan nama/kode/barcode, menyusun keranjang, lalu memproses pembayaran. Stok penjualan diambil dari batch yang belum kedaluwarsa dengan urutan tanggal penerimaan (FIFO); harga berasal dari master obat dan PPN/embalase dari pengaturan sistem. Lingkungan produksi harus memasukkan batch aktual dan tanggal kedaluwarsa sebelum menerima transaksi.
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
