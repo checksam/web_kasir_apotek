@@ -71,7 +71,7 @@
     </div>
 
     {{-- Date Filter --}}
-    <form method="GET" action="{{ request()->url() }}"
+    <form method="GET" action="{{ route('reports.pembelian') }}"
           class="flex flex-col gap-2 sm:flex-row sm:items-center">
 
         <div class="flex items-center gap-2">

@@ -98,12 +98,12 @@
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                     <label for="discount" class="mb-1 block text-xs font-medium text-slate-600">Diskon (Rp)</label>
-                    <input id="discount" name="discount" type="number" min="0" step="0.01" value="{{ old('discount', '0') }}" required class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm">
+                    <input id="discount" name="discount" type="text" inputmode="decimal" value="{{ old('discount', '0') }}" required class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm">
                     @error('discount') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
                 </div>
                 <div>
                     <label for="amount_paid" class="mb-1 block text-xs font-medium text-slate-600">Dibayar (Rp)</label>
-                    <input id="amount_paid" name="amount_paid" type="number" min="0" step="0.01" value="{{ old('amount_paid', '0') }}" required class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm">
+                    <input id="amount_paid" name="amount_paid" type="text" inputmode="decimal" value="{{ old('amount_paid', '0') }}" required class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm">
                     @error('amount_paid') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
                 </div>
             </div>

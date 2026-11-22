@@ -73,7 +73,7 @@
                 <div>
                     <label for="vat_percent" class="mb-1.5 block text-xs font-medium text-slate-600">Pajak Pertambahan Nilai (PPN) %</label>
                     <div class="flex items-center gap-2">
-                        <input id="vat_percent" name="vat_percent" type="number" min="0" max="100" step="0.01" required value="{{ old('vat_percent', $setting->vat_percent) }}" class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-[#007A87] focus:outline-none focus:ring-2 focus:ring-[#007A87]/20">
+                        <input id="vat_percent" name="vat_percent" type="text" inputmode="decimal" required value="{{ old('vat_percent', $setting->vat_percent) }}" class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-[#007A87] focus:outline-none focus:ring-2 focus:ring-[#007A87]/20">
                         <span class="text-sm text-slate-500">%</span>
                     </div>
                     @error('vat_percent') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
@@ -82,7 +82,7 @@
                     <label for="default_packaging_fee" class="mb-1.5 block text-xs font-medium text-slate-600">Biaya Embalase Default (Rp)</label>
                     <div class="flex items-center overflow-hidden rounded-md border border-slate-300 focus-within:border-[#007A87] focus-within:ring-2 focus-within:ring-[#007A87]/20">
                         <span class="bg-slate-50 px-3 py-2 text-sm text-slate-500">Rp</span>
-                        <input id="default_packaging_fee" name="default_packaging_fee" type="number" min="0" max="1000000000" step="1" required value="{{ old('default_packaging_fee', $setting->default_packaging_fee) }}" class="w-full border-0 px-3 py-2 text-sm focus:outline-none focus:ring-0">
+                        <input id="default_packaging_fee" name="default_packaging_fee" type="text" inputmode="numeric" required value="{{ old('default_packaging_fee', $setting->default_packaging_fee) }}" class="w-full border-0 px-3 py-2 text-sm focus:outline-none focus:ring-0">
                     </div>
                     @error('default_packaging_fee') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
                 </div>

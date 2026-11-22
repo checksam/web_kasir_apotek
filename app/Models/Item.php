@@ -23,15 +23,24 @@ class Item extends Model
         'barcode',
         'name',
         'category',
+        'unit',
         'selling_price',
+        'harga_beli',
         'stock',
+        'minimum_stock',
+        'is_controlled',
+        'is_active',
     ];
 
     protected function casts(): array
     {
         return [
             'selling_price' => 'decimal:2',
+            'harga_beli' => 'decimal:2',
             'stock' => 'integer',
+            'minimum_stock' => 'integer',
+            'is_controlled' => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -45,6 +54,11 @@ class Item extends Model
         return $this->hasMany(DetailPenjualan::class);
     }
 
+    public function purchaseDetails(): HasMany
+    {
+        return $this->hasMany(DetailPembelian::class, 'item_id');
+    }
+
     public function getStockStatusAttribute(): array
     {
         return match (true) {
@@ -52,7 +66,7 @@ class Item extends Model
                 'label' => 'Habis',
                 'class' => 'bg-slate-200 text-slate-600',
             ],
-            $this->stock <= 15 => [
+            $this->stock <= $this->minimum_stock => [
                 'label' => 'Stok Menipis',
                 'class' => 'bg-rose-100 text-rose-700',
             ],

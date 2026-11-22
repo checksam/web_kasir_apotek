@@ -10,10 +10,15 @@ class ExampleTest extends TestCase
     /**
      * A basic test example.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_public_landing_page_is_available_to_guests(): void
     {
         $response = $this->get('/');
 
-        $response->assertRedirect(route('login'));
+        $response->assertOk()
+            ->assertSee('PharmaPOS')
+            ->assertSee('Sistem Manajemen Apotek yang')
+            ->assertSee('Bersih, Cepat, dan Akurat')
+            ->assertSee('Didesain Khusus untuk Standar Ketat Farmasi Indonesia')
+            ->assertSee(route('login'));
     }
 }
